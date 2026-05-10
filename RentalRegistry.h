@@ -23,22 +23,35 @@ public:
         });
     }
 
-    void rent(const std::string& plate) {
-        auto it = std::find_if(inventory.begin(), inventory.end(), [&](const auto& item) {
-            return item->getPlate() == plate;
-        });
+    void rent(const std::string& plate, int days) {
+    auto it = std::find_if(inventory.begin(), inventory.end(), [&](const auto& item) {
+        return item->getPlate() == plate;
+    });
 
-        if (it == inventory.end()) {
-            throw RentalException("Vehicle not found!");
-        }
-
-        if ((*it)->getIsRented()) {
-            throw RentalException("Vehicle " + plate + " is already rented!");
-        }
-
-        (*it)->setRented(true);
-        std::cout << "Successfully rented: " << (*it)->getDescription() << "\n";
+    if (it == inventory.end()) {
+        throw RentalException("Vehicle not found!");
     }
+
+    if ((*it)->getIsRented()) {
+        throw RentalException("Vehicle " + plate + " is already rented!");
+    }
+
+    if (days <= 0) {
+        throw RentalException("Number of rental days must be greater than zero!");
+    }
+
+    double originalCost = (*it)->getRate() * days;
+    double totalCost = (*it)->calculateCost(days);
+    double discountAmount = originalCost - totalCost;
+
+    (*it)->setRented(true);
+
+    std::cout << "Successfully rented: " << (*it)->getDescription() << "\n";
+    std::cout << "Rental days: " << days << "\n";
+    std::cout << "Original cost: $" << originalCost << "\n";
+    std::cout << "Discount amount: $" << discountAmount << "\n";
+    std::cout << "Total cost: $" << totalCost << "\n";
+}
 
     void unrent(const std::string& plate) {
         auto it = std::find_if(inventory.begin(), inventory.end(), [&](const auto& item) {
