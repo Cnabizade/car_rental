@@ -39,18 +39,28 @@ int main() {
             registry.display();
         }
         else if (choice == 2) {
-            std::string plate;
-            std::cout << "Enter Plate to Rent: ";
-            std::cin >> plate;
+    std::string plate;
+    int days;
 
-            try {
-                registry.rent(plate);
-            } catch (const RentalException& e) {
-                std::cout << "\n>>> ERROR: " << e.what() << " <<<\n";
-                std::cin.clear();
-                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            }
-        }
+    std::cout << "Enter Plate to Rent: ";
+    std::cin >> plate;
+
+    std::cout << "Enter number of rental days: ";
+    if (!(std::cin >> days)) {
+        std::cout << "Invalid number of days! Please enter a number.\n";
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        continue;
+    }
+
+    try {
+        registry.rent(plate, days);
+    } catch (const RentalException& e) {
+        std::cout << "\n>>> ERROR: " << e.what() << " <<<\n";
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    }
+}
         else if (choice == 3) {
             int carType;
             std::string plate;
